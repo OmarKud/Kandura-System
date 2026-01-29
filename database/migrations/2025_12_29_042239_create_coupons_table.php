@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('coupons', function (Blueprint $table) {
+            $table->id();
+            $table->string("code")->unique();
+             $table->decimal('', 10, 2);
+             $table->unsignedInteger('usage_limit');
+             $table->unsignedInteger('used_count')->default(0);
+             $table->enum('discount_type', ['percent','fixed'])->default('fixed');
+             $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('coupons');
+    }
+};
