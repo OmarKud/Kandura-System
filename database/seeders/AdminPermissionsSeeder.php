@@ -21,9 +21,7 @@ class AdminPermissionsSeeder extends Seeder
             'admin.invoice.manage',
             'admin.review.manage',
 
-            'admin.superadmin.permission.manage',
-            'admin.superadmin.role.manage',
-            'admin.superadmin.admin.manage',
+        
         ];
 
         foreach ($permissionNames as $name) {

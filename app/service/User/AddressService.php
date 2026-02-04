@@ -29,6 +29,9 @@ class AddressService
     {
         $ID = Auth::id();
         $address = Address::where("user_id", $ID)->find($id);
+         if (!$address) {
+        return null; // 
+    }
         $address ->update($request);
         return $address;
     }
@@ -37,7 +40,7 @@ class AddressService
           $ID = Auth::id();
         $address = Address::where("user_id", $ID)->find($id);
         if ($address==null){
-            return $address;
+           throw new Exception("the address not found");
         }
         return $address->delete();
 

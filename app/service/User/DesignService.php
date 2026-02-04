@@ -23,7 +23,7 @@ class DesignService
     public function index($request)
     {
         $designs = Design::with([
-            'measurement',
+            'measurements',
             'optionSelections.designOption',
         ]);
         if ($search = $request->input('search')) {
@@ -56,8 +56,10 @@ class DesignService
             });
 
 
-        return $designs->get();
-    }}
+        
+    }
+    return $designs->get();
+    }
 
     public function show($id)
     {
@@ -123,7 +125,6 @@ class DesignService
             return null;
         }
 
-        $images = $data['images'] ?? null;
         $options = $data['options'] ?? null;
 
 
@@ -131,23 +132,25 @@ class DesignService
         if (isset($data['measurement_ids'])) {
         $design->measurements()->sync($data['measurement_ids']);
     }
+$images = $data['images'] ?? null;
 
-        if (!is_null($images)) {
-            foreach ($design->images as $img) {
-                Storage::disk('public')->delete($img->url);
-            }
-            $design->images()->delete();
+if (!is_null($images)) {
 
-            foreach ($images as $file) {
-                if ($file instanceof UploadedFile) {
-                    $path = ImageService::uploadImage($file, 'designs');
+    $images = is_array($images) ? $images : [$images];
 
-                    $design->images()->create([
-                        'url' => $path,
-                    ]);
-                }
-            }
+    foreach ($design->images as $img) {
+        Storage::disk('public')->delete($img->url);
+    }
+    $design->images()->delete();
+
+    foreach ($images as $file) {
+        if ($file instanceof \Illuminate\Http\UploadedFile) {
+            $path = ImageService::uploadImage($file, 'designs');
+            $design->images()->create(['url' => $path]);
         }
+    }
+}
+
 
         if (!is_null($options)) {
             $design->optionSelections()->delete();
@@ -167,11 +170,23 @@ class DesignService
             'optionSelections.designOption',
         ]);
     }
+public function edit($id)
+{
+    $design = Design::with( 'measurements',"images",
+            'optionSelections.designOption',)->where('user_id', Auth::id())->find($id);
+    if (!$design) return null;
+
+    $design->status = ($design->status === "active") ? "inactive" : "active";
+
+    $design->save();
+
+    return $design;
+}
 
     public function delete($id)
     {
         $design = Design::with(
-            'measurement',
+            'measurements',
             'optionSelections.designOption',
         )->where("user_id", Auth::id())->find($id);
 

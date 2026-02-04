@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\User\WalletController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Middleware\CheckActiveUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,15 +54,17 @@ Route::middleware("auth:sanctum")->group(function () {
 
 
     });
-    Route::prefix("design")->group(function () {
+    Route::prefix("design")->middleware(CheckActiveUser::class)->group(function () {
         Route::get("/", [DesignController::class, "index"])->middleware("permission:view design");
         Route::get("/{id}", [DesignController::class, "show"])->middleware("permission:view design");
         Route::post("/", [DesignController::class, "create"])->middleware("permission:create design");
-        Route::put("/{id}", [DesignController::class, "update"])->middleware("permission:update design");
+        Route::post("/{id}", [DesignController::class, "update"])->middleware("permission:update design");
         Route::delete("/{id}", [DesignController::class, "delete"])->middleware("permission:delete design");
+        Route::put("/{id}", [DesignController::class, "StatusDesign"])->middleware("permission:update design");
+
 
     });
-    Route::prefix("orders")->group(function () {
+    Route::prefix("orders")->middleware(CheckActiveUser::class)->group(function () {
         Route::post("/", [OrderController::class, "create"]);
         Route::get("/", [OrderController::class, "index"]);
         Route::put("/{order}", [OrderController::class, "update"]);
@@ -74,13 +77,13 @@ Route::middleware("auth:sanctum")->group(function () {
         Route::post("/", [WalletController::class, "create"]);
 
     });
-    Route::prefix('invoices')->group(function () {
+    Route::prefix('invoices')->middleware(CheckActiveUser::class)->group(function () {
     Route::get('/', [UserInvoiceController::class, 'index']);                 // JSON collection
     Route::get('/order/{order}', [UserInvoiceController::class, 'showByOrder']); // JSON one
     Route::get('/order/{order}/download', [UserInvoiceController::class, 'downloadByOrder']); // PDF download
 });
 
- Route::prefix('reviews')->group(function () {
+ Route::prefix('reviews')->middleware(CheckActiveUser::class)->group(function () {
     Route::post('/', [ReviewController::class, 'store']);
     Route::get('/order/{order}', [ReviewController::class, 'myByOrder']);
 });

@@ -25,6 +25,9 @@ class AddressController extends Controller
     public function update(UpdateAddressRequest $request, $id)
     {
         $address = $this->addressservice->update($request->validated(), $id);
+        if (!$address) {
+        return response()->json(['message' => 'Address not found'], 404);
+    }
         return $this->complet(new AddressResource($address));
 
     }

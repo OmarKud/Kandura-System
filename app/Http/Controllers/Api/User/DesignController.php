@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateDesignRequest;
+use App\Http\Requests\EditActivateDesignRequest;
 use App\Http\Requests\UpdateDesignRequest;
 use App\Http\Resources\DesignResource;
 use App\Service\User\DesignService;
@@ -46,6 +47,7 @@ class DesignController extends Controller
 
     public function update(UpdateDesignRequest $request, $id)
     {
+        $data['images'] = $request->file('images');
         $design = $this->designService->update($request->validated(), $id);
 
         if ($design == null) {
@@ -53,6 +55,15 @@ class DesignController extends Controller
         }
 
         return $this->complet(new DesignResource($design), "updated succes");
+    }
+    public function StatusDesign($id){
+      $design = $this->designService->edit( $id);
+
+        if ($design == null) {
+            return response()->json("the design is not found");
+        }
+
+        return $this->complet(new DesignResource($design), "updated succes");   
     }
 
     public function delete($id)
