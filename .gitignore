@@ -19,6 +19,7 @@
 /storage/framework/
 /storage/logs/
 /bootstrap/cache/
+/storage/app/firebase/*.json
 
 docker-compose.override.yml
 
@@ -39,4 +40,3 @@ yarn-error.log
 .env.*
 /vendor/
 /node_modules/
-

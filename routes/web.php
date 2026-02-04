@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\CouponController;
 use App\Http\Controllers\Web\DashboardAddressController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DashboardReviewController;
+use App\Http\Controllers\Web\FcmTokenController;
 use App\Http\Controllers\Web\SuperAdminAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboard\Analytics;
@@ -55,6 +56,7 @@ use App\Http\Controllers\Web\DashboardInvoiceController;
 use App\Http\Controllers\Web\DashboardOrderController;
 use App\Http\Controllers\Web\DashboardUserController;
 use App\Http\Controllers\Web\DashboardWalletController;
+use App\Http\Controllers\Web\NotificationWebController;
 use App\Http\Controllers\Web\StripeRedirectController;
 use App\Http\Controllers\Web\Superadmin\AdminController;
 use App\Http\Controllers\Web\Superadmin\PermissionController;
@@ -101,7 +103,7 @@ Route::post('/dashboard/logout', function () {
     return redirect()->route('admin.login');
 })->name('dashboard.logout')->middleware('auth');
 
-
+ 
 Route::middleware('auth')->get('/dashboard/welcome', function () {
     return view('dashboard.welcome');
 })->name('dashboard.welcome');
@@ -148,6 +150,24 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(functi
 
     Route::get('/reviews', [DashboardReviewController::class, 'index'])->name('reviews.index');
     ////////////////////////////////////
+ Route::get('/notifications', [NotificationWebController::class, 'index'])->name('notifications.index');
+
+    Route::post('/notifications/mark-all-read', [NotificationWebController::class, 'markAllRead'])
+        ->name('notifications.markAllRead');
+
+    Route::post('/notifications/{id}/mark-read', [NotificationWebController::class, 'markRead'])
+        ->whereUuid('id')
+        ->name('notifications.markRead');
+
+    Route::get('/notifications/{id}/open', [NotificationWebController::class, 'open'])
+        ->whereUuid('id')
+        ->name('notifications.open');
+
+Route::post('/fcm-tokens', [FcmTokenController::class, 'store'])
+    ->middleware('auth')
+    ->name('fcm_tokens.store');
+    Route::delete('/fcm-tokens', [FcmTokenController::class, 'destroy'])->middleware('auth')
+  ->name('fcm-tokens.destroy');
 
 
 

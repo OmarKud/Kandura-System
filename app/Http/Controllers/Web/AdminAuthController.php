@@ -19,10 +19,9 @@ class AdminAuthController extends Controller
         $this->authService = $authService;
     }
 
-    // عرض صفحة تسجيل الدخول (Blade)
     public function showLoginForm()
     {
-        return view('admin.auth.login'); // انت حر بتسمّيها
+        return view('admin.auth.login'); // 
     }
 
     // تنفيذ تسجيل الدخول للـ ADMIN (role_id = 3 أو 4)

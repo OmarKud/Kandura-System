@@ -57,7 +57,6 @@
         <option value="sleeve" {{ old('type', $designOption->type ?? '') == 'sleeve' ? 'selected' : '' }}>Sleeve</option>
         <option value="pocket" {{ old('type', $designOption->type ?? '') == 'pocket' ? 'selected' : '' }}>Pocket</option>
         <option value="fabric" {{ old('type', $designOption->type ?? '') == 'fabric' ? 'selected' : '' }}>Fabric</option>
-        <option value="colar" {{ old('type', $designOption->type ?? '') == 'colar' ? 'selected' : '' }}>Colar</option>
       </select>
     </div>
 

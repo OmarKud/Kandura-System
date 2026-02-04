@@ -25,7 +25,7 @@ class CreateDesignRequest extends FormRequest
             'images' => ['required', 'array', 'min:1'],
             'images.*' => ['required', 'image', 'max:2048'],
 
-            'options' => ['required', 'array',"min:5"],
+            'options' => ['required', 'array',"min:4"],
             'options.*.design_option_id' => ['required_with:options', 'exists:design_options,id',],
             'options.*.value' => ['nullable', 'string', 'max:255'],
         ];

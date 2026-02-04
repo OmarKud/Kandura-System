@@ -2,6 +2,7 @@
 
 namespace App\service\User;
 
+use App\Events\OrderDesignsAttached;
 use App\Models\Coupon;
 use App\Models\Design;
 use App\Models\DesignOptionSelection;
@@ -144,6 +145,8 @@ if (!$allowed) {
                 $designOrder->options()->sync($optionIds);
             }
         }
+        
+event(new OrderDesignsAttached($order));
 
         if ($paymentMethod == "stripe") {
             $session = app(StripePaymentService::class)->createCheckoutSession($order);

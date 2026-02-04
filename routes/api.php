@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\DesignOptionController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\User\AddressController;
 use App\Http\Controllers\Api\User\DesignController;
 use App\Http\Controllers\Api\User\InvoiceController as UserInvoiceController;
@@ -82,6 +83,14 @@ Route::middleware("auth:sanctum")->group(function () {
  Route::prefix('reviews')->group(function () {
     Route::post('/', [ReviewController::class, 'store']);
     Route::get('/order/{order}', [ReviewController::class, 'myByOrder']);
+});
+
+Route::prefix('notifications')->group(function () {
+     Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/summary', [NotificationController::class, 'summary']);
+
+    Route::post('/mark-all-read', [NotificationController::class, 'markAllRead']);
+    Route::post('/{id}/mark-read', [NotificationController::class, 'markRead']);
 });
 
 

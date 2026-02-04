@@ -33,7 +33,7 @@ class CreateOrderRequest extends FormRequest
             'coupon_code' => ['nullable','string','max:50'],
  'items' => ['required', 'array', 'min:1'],
         'items.*.design_id' => ['required', 'exists:designs,id'],
-        'items.*.design_option_ids' => ['required', 'array',"min:5"],
+        'items.*.design_option_ids' => ['required', 'array',"min:4","max:4"],
         'items.*.design_option_ids.*' => ["required",'integer', 'exists:design_options,id'],
 'items.*.measurement_id' => ['required','exists:measurements,id'],
         ];

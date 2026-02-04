@@ -12,8 +12,7 @@ class DashboardDesignOptionController extends Controller
     {
         $query = DesignOption::query();
 
-        // 1) Search
-        // يبحث في name (en/ar) + type
+        
         if ($search = trim((string) $request->input('search', ''))) {
             $query->where(function ($q) use ($search) {
                 $q->where('name->en', 'like', "%{$search}%")
@@ -28,7 +27,6 @@ class DashboardDesignOptionController extends Controller
         }
 
         // 3) Sort
-        // خليتها آمنة: ما بنسمح إلا بهالأعمدة
         $allowedSort = ['id', 'type', 'created_at', 'updated_at'];
         $sortBy  = $request->input('sort_by', 'id');
         $sortDir = strtolower($request->input('sort_dir', 'desc'));

@@ -28,6 +28,38 @@
     .page-top h2{margin:0;font-weight:1000;font-size:18px}
     .sub{color:var(--muted);font-weight:800;font-size:12.5px;margin-top:4px}
 
+    .opt-groups{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
+}
+
+.opt-group{
+  padding-top:10px;
+  border-top:1px dashed rgba(15,23,42,.18);
+}
+
+.opt-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+
+.opt-title{
+  font-size:12px;
+  font-weight:1000;
+  color: var(--muted);
+  letter-spacing:.2px;
+}
+
+.opt-items{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
     .filters{
         background: rgba(15,23,42,.02);
         border: 1px solid rgba(15,23,42,.10);
@@ -228,7 +260,16 @@
             $url = $imgUrl($firstImg);
 
             $sizes = $d->measurements?->pluck('size')->filter()->unique()->values() ?? collect();
-            $optionNames = $d->optionSelections?->pluck('designOption.name')->filter()->unique()->values() ?? collect();
+$optionsByType = $d->optionSelections
+    ?->filter(fn($s) => $s->designOption)
+    ->groupBy(fn($s) => $s->designOption->type ?? 'other') ?? collect();
+    $typeLabel = [
+  'collar' => 'Collar',
+  'sleeve' => 'Sleeve',
+  'pocket' => 'Pocket',
+  'fabric' => 'Fabric',
+];
+
         @endphp
 
         <div class="card">
@@ -270,18 +311,29 @@
                     </div>
 
                     <div class="line">
-                        <span class="muted">Options:</span>
-                        @if($optionNames->count())
-                            @foreach($optionNames->take(6) as $o)
-                                <span class="chip">⚙️ {{ $o }}</span>
-                            @endforeach
-                            @if($optionNames->count() > 6)
-                                <span class="chip">+{{ $optionNames->count() - 6 }}</span>
-                            @endif
-                        @else
-                            <span class="muted">—</span>
-                        @endif
-                    </div>
+  <span class="muted">Options:</span>
+
+  @if($optionsByType->count())
+    <div class="opt-groups">
+      @foreach($optionsByType as $type => $rows)
+        <div class="opt-group">
+          <div class="opt-head">
+            <span class="opt-title">{{ $typeLabel[$type] ?? ucfirst($type) }}</span>
+          </div>
+
+          <div class="opt-items">
+            @foreach($rows->pluck('designOption.name')->filter()->unique()->values() as $name)
+              <span class="chip">⚙️ {{ $name }}</span>
+            @endforeach
+          </div>
+        </div>
+      @endforeach
+    </div>
+  @else
+    <span class="muted">—</span>
+  @endif
+</div>
+
                 </div>
 
                 <div class="actions">

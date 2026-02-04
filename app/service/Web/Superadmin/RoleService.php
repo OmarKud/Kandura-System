@@ -24,7 +24,7 @@ class RoleService
     public function allPermissions(): Collection
     {
         return Permission::query()
-            ->where('guard_name', 'api')
+            ->where('guard_name', 'api')->whereNot("id",62)->whereNot("id",63)->whereNot("id",64)
             ->orderBy('name')
             ->get(['id','name']);
     }

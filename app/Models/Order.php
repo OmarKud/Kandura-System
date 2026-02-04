@@ -30,6 +30,7 @@ class Order extends Model
     public function designs(){
         return $this->belongsToMany(Design::class);
     }
+
     public function designOrders(){
         return $this->hasMany(DesignOrder::class);
     }
