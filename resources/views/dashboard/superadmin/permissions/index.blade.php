@@ -82,7 +82,6 @@
       <div class="right" style="margin-left:auto">
         <button class="btnx" type="submit">Apply</button>
         <a class="btnx btnx-ghost" href="{{ route('dashboard.superadmin.permissions.index') }}">Reset</a>
-        <a class="btnx" href="{{ route('dashboard.superadmin.permissions.create') }}">+ Create</a>
       </div>
     </form>
   </div>
@@ -90,14 +89,12 @@
   <div class="table">
     <div class="thead">
       <div>Name</div>
-      <div>Guard</div>
      <!-- <div style="text-align:right">Actions</div>-->
     </div>
 
     @forelse($permissions as $p)
       <div class="row">
         <div style="font-weight:900">{{ $p->name }}</div>
-        <div style="color:var(--muted);font-weight:800">{{ $p->guard_name }}</div>
         <div class="right">
          <!-- <a class="btnx btnx-ghost" href="{{ route('dashboard.superadmin.permissions.edit', $p) }}">Edit</a>-->
           <form method="POST" action="{{ route('dashboard.superadmin.permissions.destroy', $p) }}">
