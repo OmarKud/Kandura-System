@@ -37,8 +37,8 @@ class CouponController extends Controller
         ]);
 
         // optional: percent max 100
-        if ($validated['discount_type'] === 'percent' && (float)$validated['discount_value'] > 100) {
-            return back()->withErrors(['discount_value' => 'Percent discount can not be more than 100'])->withInput();
+        if ($validated['discount_type'] === 'percent' && (float)$validated['discount_value'] > 99) {
+            return back()->withErrors(['discount_value' => 'Percent discount can not be more than 99'])->withInput();
         }
 
         // set defaults if not in db defaults

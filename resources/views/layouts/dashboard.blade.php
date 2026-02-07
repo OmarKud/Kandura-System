@@ -107,16 +107,19 @@
             display:flex;
         }
 
-        /* ✅ Sidebar أكبر */
-        .sidebar{
-            width: 310px;
-            background: var(--card);
-            border-inline-end: 1px solid var(--border);
-            padding: 18px 14px;
-            position: sticky;
-            top:0;
-            height: 100vh;
-        }
+       .sidebar{
+  width: 310px;
+  background: var(--card);
+  border-inline-end: 1px solid var(--border);
+  padding: 18px 14px;
+  position: sticky;
+  top:0;
+  height: 100vh;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 
         .brand{
             display:flex; align-items:center; gap:12px;
@@ -381,6 +384,14 @@
         <small>Show</small>
     </a>
     @endcan
+    @can('admin.transaction.manage')
+<a href="{{ route('dashboard.transactions.index') }}"
+   class="{{ request()->routeIs('dashboard.transactions.*') ? 'active' : '' }}">
+  <span>Transactions</span>
+  <small>Show</small>
+</a>
+@endcan
+
 
 @can('admin.superadmin.permission.manage')
     <div style="margin:12px 10px 6px; opacity:.75; font-weight:900; font-size:12px;">

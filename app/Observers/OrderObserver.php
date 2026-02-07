@@ -10,6 +10,7 @@ use App\Notifications\NewOrderCreatedForAdmin;
 use App\Notifications\OrderStatusChanged;
 use App\service\FcmV1Service;
 use App\service\Invoice\InvoiceService;
+use App\service\WalletTransactionService;
 use Illuminate\Support\Facades\Notification;
 
 
@@ -39,6 +40,15 @@ $adminIds = User::permission('admin.order.manage')->pluck('id')->all(); //
 
 
         Notification::send($admins, new NewOrderCreatedForAdmin($order));
+         if (strtolower((string) $order->status) !== 'completed') {
+            return;
+        }
+         if (strtolower((string) $order->payment_status) !== 'paid') {
+            return;
+        }
+
+        app(InvoiceService::class)->ensureInvoiceForCompletedOrder($order);
+        app(WalletTransactionService::class)->recordOrderPayment($order);
     }
     public function updated(Order $order): void
     {
@@ -54,7 +64,12 @@ $adminIds = User::permission('admin.order.manage')->pluck('id')->all(); //
         if (strtolower((string) $order->status) !== 'completed') {
             return;
         }
+         if (strtolower((string) $order->payment_status) !== 'paid') {
+            return;
+        }
 
         app(InvoiceService::class)->ensureInvoiceForCompletedOrder($order);
+       app(WalletTransactionService::class)->recordOrderPayment($order);
+
     }
 }

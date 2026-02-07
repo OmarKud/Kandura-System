@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
               "email"=>"user@gmail.com" ,
               "password"=>Hash::make("password123"),
               "phone"=>"099123567",
-              "role_id"=>"1"
+              "role_id"=>"2"
 
             ],
             [
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
               "email"=>"admin@gmail.com" ,
               "password"=>Hash::make("password1234"),
               "phone"=>"09912084",
-              "role_id"=>"1"
+              "role_id"=>"3"
 
             ],
             [
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
               "email"=>"super@gmail.com" ,
               "password"=>Hash::make("password12385"),
               "phone"=>"099936567",
-              "role_id"=>"1"
+              "role_id"=>"4"
 
             ],
 

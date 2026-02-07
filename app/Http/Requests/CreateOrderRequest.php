@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\DesignOptionEnumType;
 use App\Enum\PaymentEnumOrder;
 use App\Models\Design;
+use App\Models\DesignOption;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -38,9 +40,9 @@ class CreateOrderRequest extends FormRequest
 'items.*.measurement_id' => ['required','exists:measurements,id'],
         ];
     }
-    public function withValidator($validator): void
-    {
-        $validator->after(function ($validator) {
+   public function withValidator($validator): void
+{
+    $validator->after(function ($validator) {
         $items = $this->input('items', []);
 
         foreach ($items as $index => $item) {
@@ -58,31 +60,61 @@ class CreateOrderRequest extends FormRequest
             }
         }
     });
-        $validator->after(function ($validator) {
-            $items = $this->input('items', []);
 
-            foreach ($items as $i => $item) {
-                $designId = $item['design_id'] ?? null;
-                $optionIds = $item['design_option_ids'] ?? [];
+    $validator->after(function ($validator) {
+        $items = $this->input('items', []);
 
-                if (!$designId || empty($optionIds)) {
-                    continue;
-                }
+        $requiredTypes = [
+            DesignOptionEnumType::COLLAR,
+            DesignOptionEnumType::SLEEVE,
+            DesignOptionEnumType::POCKET,
+            DesignOptionEnumType::FABRIC,
+        ];
 
-                $validCount = DB::table('design_option_selections')
-                    ->where('design_id', $designId)
-                    ->whereIn('design_option_id', $optionIds)
-                    ->distinct()
-                    ->count('design_option_id');
+        foreach ($items as $i => $item) {
+            $designId = $item['design_id'] ?? null;
+            $optionIds = $item['design_option_ids'] ?? [];
 
-                if ($validCount !== count(array_unique($optionIds))) {
-                    $validator->errors()->add(
-                        "items.$i.design_option_ids",
-                       " this option is not valid in this design"
-                    );
+            if (!$designId) continue;
+
+            $optionIds = array_values(array_unique($optionIds));
+            if (count($optionIds) !== 4) {
+                $validator->errors()->add("items.$i.design_option_ids", "لازم تختار 4 خيارات بدون تكرار");
+                continue;
+            }
+
+            $validCount = DB::table('design_option_selections')
+                ->where('design_id', $designId)
+                ->whereIn('design_option_id', $optionIds)
+                ->distinct()
+                ->count('design_option_id');
+
+            if ($validCount !== 4) {
+                $validator->errors()->add("items.$i.design_option_ids", "في خيارات مو تابعة لهالتصميم");
+                continue;
+            }
+
+            $types = DesignOption::whereIn('id', $optionIds)->pluck('type')->all();
+
+            // لازم يكون عندك 4 types
+            if (count($types) !== 4) {
+                $validator->errors()->add("items.$i.design_option_ids", "خيارات غير صحيحة");
+                continue;
+            }
+
+            // لازم يكونوا كلهم مختلفين
+            if (count(array_unique($types)) !== 4) {
+                $validator->errors()->add("items.$i.design_option_ids", "لازم تختار خيار واحد فقط من كل نوع (collar/sleeve/pocket/fabric)");
+                continue;
+            }
+
+            // لازم يغطي الأنواع المطلوبة
+            foreach ($requiredTypes as $t) {
+                if (!in_array($t, $types, true)) {
+                    $validator->errors()->add("items.$i.design_option_ids", "لازم يكون في خيار من نوع: {$t}");
+                    break;
                 }
             }
-        });
-    }
-
-}
+        }
+    });
+}}

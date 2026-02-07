@@ -25,6 +25,14 @@ class OrderService
         $items = $data['items'] ?? [];
 
         $designIds = collect($items)->pluck('design_id')->unique()->values();
+        $inactiveDesigns = Design::whereIn('id', $designIds)
+    ->where('status', '!=', 'active')
+    ->pluck('id')
+    ->all();
+
+if (!empty($inactiveDesigns)) {
+    throw new Exception("this design is invalid : " . implode(',', $inactiveDesigns));
+}
         $designs = Design::whereIn('id', $designIds)->get()->keyBy('id');
 
         $total = 0;
@@ -68,6 +76,9 @@ class OrderService
 
             if ($coupon->used_count >= $coupon->usage_limit) {
                 throw new Exception("Coupon usage limit reached");
+            }
+            if ($coupon->discount_type == 'percent'&&$coupon->discount_value =="100") {
+                throw new Exception("you cant use this coupon");
             }
 
             if ($coupon->discount_type === 'percent') {

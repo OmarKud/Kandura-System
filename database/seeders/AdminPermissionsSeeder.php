@@ -20,6 +20,7 @@ class AdminPermissionsSeeder extends Seeder
             'admin.coupon.manage',
             'admin.invoice.manage',
             'admin.review.manage',
+            "admin.transaction.manage"
 
         
         ];

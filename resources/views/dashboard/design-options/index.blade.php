@@ -5,10 +5,8 @@
 @section('content')
 
 @php
-    // مرونة حسب اسم المتغير عندك بدون ما نغيّر الكنترولر
     $list = $options ?? $designOptions ?? $design_options ?? null;
 
-    // لو عندك types جاهزة من controller خليه، إذا لا، ما رح ينهار
     $typesList = $types ?? [];
 
     $inputStyle = "padding:12px 12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);
@@ -114,7 +112,7 @@
 
     {{-- Sort By --}}
     <select name="sort_by" style="{{ $selectStyle }}">
-        <option value="id" {{ request('sort_by','id') == 'id' ? 'selected' : '' }}>Sort by ID</option>
+        <option value="id" {{ request('sort_by','id') == 'id' ? 'selected' : '' }}>Sort by Number</option>
         <option value="type" {{ request('sort_by') == 'type' ? 'selected' : '' }}>Sort by Type</option>
         <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Sort by Created</option>
     </select>
@@ -165,7 +163,7 @@
     <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:900px;">
         <thead>
         <tr style="background:rgba(79,209,255,.16);border-bottom:1px solid rgba(15,23,42,.10);">
-            <th style="text-align:left;padding:14px;font-weight:900;color:#0f172a;">ID</th>
+            <th style="text-align:left;padding:14px;font-weight:900;color:#0f172a;">Number</th>
             <th style="text-align:left;padding:14px;font-weight:900;color:#0f172a;">Name (EN)</th>
             <th style="text-align:left;padding:14px;font-weight:900;color:#0f172a;">Name (AR)</th>
             <th style="text-align:left;padding:14px;font-weight:900;color:#0f172a;">Type</th>

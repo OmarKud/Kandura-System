@@ -31,7 +31,7 @@ class AuthController extends Controller
     } 
     public function profile() {
         $user = $this->authservice->profile();
-        return $this->complet(new ProfileResource($user));
+        return $this->complet(new UserResource($user));
     }
     public function edit_profile(UpdateProfileRequest $request){
             if (! $request->hasAny(['name', 'email', 'phone', 'password'])) {
@@ -39,7 +39,7 @@ class AuthController extends Controller
 }
          $user = $this->authservice->edit_profile($request);
         
-        return $this->complet(new ProfileResource($user), "User updated successfully");
+        return $this->complet(new UserResource($user), "User updated successfully");
 
     }
     public function delete_profile(){

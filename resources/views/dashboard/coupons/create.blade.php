@@ -86,7 +86,7 @@
             </div>
 
             <div style="margin-top:12px;color:var(--muted);font-weight:800;font-size:12.5px;">
-                * If discount_type is percent, value should be <= 100.
+                * If discount_type is percent, value should be < 100.
             </div>
         </form>
     </div>

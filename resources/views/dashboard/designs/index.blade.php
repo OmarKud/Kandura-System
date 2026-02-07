@@ -115,35 +115,82 @@
         min-height: 100%;
     }
 
-    .imgwrap{
-        height: 210px;
-        background: linear-gradient(135deg, rgba(37,99,235,.10), rgba(212,160,23,.10));
-        border-bottom: 1px solid rgba(15,23,42,.10);
-        position:relative;
-    }
-    .imgwrap img{
-        width:100%;
-        height:100%;
-        object-fit: cover; /* default */
-        display:block;
-    }
-    .imgwrap.fit img{object-fit: contain; background:#fff;}
+    /* ✅ Image area: premium card media */
+.imgwrap{
+    height: 230px; /* شوي أعلى = أجمل */
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(240px 160px at 20% 20%, rgba(37,99,235,.14), transparent 60%),
+        radial-gradient(260px 200px at 80% 70%, rgba(212,160,23,.12), transparent 62%),
+        linear-gradient(180deg, #ffffff, rgba(15,23,42,.02));
+    border-bottom: 1px solid rgba(15,23,42,.10);
+}
 
-    .fit-btn{
-        position:absolute;
-        top:10px;
-        inset-inline-end:10px;
-        height:34px;
-        border-radius: 999px;
-        border: 1px solid rgba(15,23,42,.14);
-        background: rgba(255,255,255,.92);
-        padding: 0 12px;
-        font-weight:1000;
-        cursor:pointer;
-        display:inline-flex;
-        align-items:center;
-        gap:8px;
-    }
+/* ✅ Keep image crisp + smooth */
+.imgwrap img{
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center 18%;
+    transform: scale(1);
+    transition: transform .35s ease, filter .35s ease;
+    filter: saturate(1.02) contrast(1.02);
+}
+
+/* ✅ hover: tiny zoom for premium feel */
+.card:hover .imgwrap img{
+    transform: scale(1.03);
+}
+
+/* ✅ Fit mode: contain + clean background */
+.imgwrap.fit img{
+    object-fit: contain;
+    object-position: center;
+    transform: scale(1); /* no zoom in contain mode */
+    filter: none;
+}
+
+/* optional: subtle grid bg when contain */
+.imgwrap.fit{
+    background:
+        linear-gradient(90deg, rgba(15,23,42,.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(15,23,42,.035) 1px, transparent 1px),
+        linear-gradient(180deg, #ffffff, rgba(15,23,42,.02));
+    background-size: 18px 18px, 18px 18px, auto;
+}
+
+/* ✅ Fit button: premium overlay pill */
+.fit-btn{
+    position: absolute;
+    top: 12px;
+    inset-inline-end: 12px;
+
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(15,23,42,.14);
+    background: rgba(255,255,255,.86);
+    backdrop-filter: blur(8px);
+
+    padding: 0 12px;
+    font-weight: 1000;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    box-shadow: 0 10px 22px rgba(15,23,42,.10);
+    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.fit-btn:hover{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,.92);
+    border-color: rgba(37,99,235,.22);
+}
+
 
     .body{padding: 12px 12px 14px}
     .title{
@@ -354,7 +401,13 @@ $optionsByType = $d->optionSelections
     function toggleFit(btn){
         const wrap = btn.closest('.imgwrap');
         if(!wrap) return;
+
         wrap.classList.toggle('fit');
+
+        // optional text switch
+        const isFit = wrap.classList.contains('fit');
+        btn.innerHTML = isFit ? "🖼️ Cover" : "🖼️ Fit";
     }
 </script>
+
 @endsection

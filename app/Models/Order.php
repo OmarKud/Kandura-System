@@ -15,7 +15,8 @@ class Order extends Model
 "status",
 'coupon_id',
 'final_price',
-"discount_amount"
+"discount_amount",
+"payment_status"
     ];
     protected $casts = [
     'price' => 'float',

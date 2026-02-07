@@ -20,7 +20,7 @@ class AuthService
     {
         $this->walletcontroller = $walletcontroller;
     }
-    public function register($request, $role = 1)
+    public function register( $request, $role = 1)
     {
         $request["password"] = Hash::make($request['password']);
         // $request["role_id"]=$role;
@@ -33,15 +33,15 @@ class AuthService
 
         ));
         $user->assignRole("user");
-        if ($request->hasFile('profile_image')) {
-            $path = 'profile_images';
-            $file = $request->file('profile_image');
+       if (request()->hasFile('profile_image')) {
+        $file = request()->file('profile_image');
+        $path = ImageService::uploadImage($file, 'profile_images');
 
-            $user->profileImage()->updateOrCreate(
-                ['user_id' => $user->id],
-                ['url' => ImageService::uploadImage($file, $path)]
-            );
-        }
+        $user->profileImage()->updateOrCreate(
+            ['user_id' => $user->id],
+            ['url' => $path]
+        );
+    }
 
         $user_id = $user->id;
         $this->walletcontroller->create($user_id);

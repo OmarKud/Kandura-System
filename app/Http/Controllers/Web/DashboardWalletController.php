@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wallet;
+use App\service\WalletTransactionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -76,7 +77,9 @@ public function show(User $user)
             $wallet = Wallet::where('id', $wallet->id)->lockForUpdate()->first();
             $wallet->amount = (float) $wallet->amount + $chargeAmount;
             $wallet->save();
-        });
+            
+         app(WalletTransactionService::class)->recordDeposit($user, $chargeAmount, auth()->user());
+    });
 
         return back()->with('success', "Wallet charged successfully (+{$chargeAmount}).");
     }
